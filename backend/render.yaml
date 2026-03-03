@@ -1,0 +1,8 @@
+# Optional: use this when creating a Web Service on Render (Root Directory = backend).
+# Or set the same in Dashboard: Build & Deploy -> Build Command / Start Command.
+services:
+  - type: web
+    name: attendance-api
+    env: python
+    buildCommand: pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
