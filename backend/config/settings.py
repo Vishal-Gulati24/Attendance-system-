@@ -26,7 +26,8 @@ ALLOWED_HOSTS = [h.strip() for h in _allowed.split(',') if h.strip()] if _allowe
 # Do not set CORS_ALLOW_ALL_ORIGINS in production.
 _cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '').strip()
 if _cors_origins:
-    CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins.split(',') if o.strip()]
+    # Strip trailing slashes; corsheaders rejects origins with path
+    CORS_ALLOWED_ORIGINS = [o.strip().rstrip('/') for o in _cors_origins.split(',') if o.strip()]
     CORS_ALLOW_ALL_ORIGINS = False
 else:
     # Local dev: allow all when no CORS_ALLOWED_ORIGINS set
