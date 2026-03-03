@@ -10,12 +10,16 @@ attendance/
 │   ├── src/
 │   ├── package.json
 │   └── vite.config.js
-├── backend/            # Django (API + Excel export)
-│   ├── config/         # Django settings, urls
-│   ├── core/           # App: models, views, API
-│   ├── requirements.txt   # ← Backend deps: update here when you add packages
-│   └── manage.py
-├── requirements.txt   # Copy of backend deps (optional, for root pip install)
+├── backend/           # Django project root (run manage.py from here)
+│   ├── .venv/
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── config/        # Django settings package (no nested config/)
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   └── core/          # Attendance app: models, API, Excel export
+├── requirements.txt   # Copy of backend deps (optional)
 ├── .gitignore
 ├── SYSTEM_DESIGN.md
 └── README.md
@@ -109,3 +113,23 @@ So: **one repo, two deployments** — frontend on Vercel (root `frontend`), back
 - Build frontend: `cd frontend && npm run build`
 - Deploy frontend to Vercel (root: `frontend`).
 - Deploy backend to a Python host; set CORS to allow your Vercel frontend origin.
+
+## Security & environment (for hosting)
+
+Settings are driven by environment variables so you never commit secrets.
+
+### Backend (`backend/`)
+
+- Copy `backend/.env.example` to `backend/.env` and set values (do not commit `.env`).
+- **Production (must set):**
+  - `DJANGO_SECRET_KEY` – generate with: `python -c "import secrets; print(secrets.token_urlsafe(50))"`
+  - `ALLOWED_HOSTS` – comma-separated, e.g. `yourdomain.com,api.yourdomain.com`
+  - `CORS_ALLOWED_ORIGINS` – comma-separated frontend URL(s), e.g. `https://yourapp.vercel.app`
+- **Production (recommended):** leave `DEBUG` unset or `DEBUG=0`.
+- Optional: `CSRF_TRUSTED_ORIGINS`, `SECURE_SSL_REDIRECT` – see `.env.example`.
+
+### Frontend (`frontend/`)
+
+- Copy `frontend/.env.example` to `frontend/.env` (do not commit `.env`).
+- **Production:** set `VITE_API_URL` to your backend API base URL (no trailing slash), e.g. `https://api.yourdomain.com`.  
+  In Vercel, add this as an environment variable for the project; rebuild after changing it.

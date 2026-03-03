@@ -1,7 +1,0 @@
-# Root: install backend deps from here or use backend/requirements.txt
-# Usage: pip install -r backend/requirements.txt
-# Or copy backend deps (same as backend/requirements.txt):
-Django>=4.2,<5
-djangorestframework>=3.14
-django-cors-headers>=4.3
-openpyxl>=3.1
