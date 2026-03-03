@@ -1,5 +1,7 @@
-// Use VITE_API_URL in production (e.g. https://api.yourdomain.com). Dev: proxy /api to backend.
-const API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '') || '/api';
+// Use VITE_API_URL in production (e.g. https://api.yourdomain.com or https://api.yourdomain.com/api). Dev: proxy /api to backend.
+let API = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '') || '/api';
+// Ensure production base URL ends with /api so paths like /auth/signup/ resolve correctly
+if (API && !API.endsWith('/api')) API = `${API}/api`;
 
 export function getToken() {
   return localStorage.getItem('attendance_token');
